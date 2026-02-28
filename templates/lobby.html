@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="lobby-container">
+    <div class="lobby-header glass">
+        <div class="header-text">
+            <h2>Public Lobby</h2>
+            <p>Join an active match or create your own room to play online.</p>
+        </div>
+        <form action="{{ url_for('create_new_room') }}" method="POST" class="create-room-form">
+            <input type="hidden" name="is_private" value="false">
+            <button type="submit" class="btn btn-primary">Create Public Room</button>
+        </form>
+    </div>
+
+    <div class="rooms-grid">
+        {% if rooms %}
+        {% for room in rooms %}
+        <div class="room-card glass">
+            <div class="room-info">
+                <h3>Match #{{ loop.index }}</h3>
+                <p>Hosted by <strong>{{ room.host }}</strong></p>
+            </div>
+            <a href="{{ url_for('room', room_id=room._id) }}" class="btn btn-outline">Join Game</a>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="empty-state">
+            <p>No public rooms available right now. Be the first to start a match!</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

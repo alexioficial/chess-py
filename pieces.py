@@ -8,6 +8,13 @@ class Piece:
         self.has_moved = False
         self.symbol = "?"
 
+    def serialize(self):
+        return {
+            "type": self.__class__.__name__,
+            "color": self.color,
+            "has_moved": self.has_moved,
+        }
+
     def __str__(self):
         return self.symbol
 

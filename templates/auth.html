@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card glass">
+        <h2>{{ 'Login' if login_mode else 'Create an Account' }}</h2>
+        <p class="subtitle">
+            {% if login_mode %}
+            Welcome back, ready to play?
+            {% else %}
+            Join the ultimate online chess experience.
+            {% endif %}
+        </p>
+
+        <form action="{{ url_for('login') if login_mode else url_for('register') }}" method="POST">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required autocomplete="off"
+                    placeholder="Enter your username">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required placeholder="••••••••">
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">
+                {{ 'Sign In' if login_mode else 'Register Now' }}
+            </button>
+        </form>
+
+        <div class="auth-switch">
+            {% if login_mode %}
+            Don't have an account? <a href="{{ url_for('register') }}">Register</a>
+            {% else %}
+            Already have an account? <a href="{{ url_for('login') }}">Login</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

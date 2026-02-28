@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="game-container">
+    <div class="game-info glass">
+        <h2>Room: <span class="highlight">{{ room._id }}</span></h2>
+        <div class="players-info">
+            <div class="player white-player">
+                <span class="color-indicator white-dot"></span>
+                <span>White: <strong>{{ room.player_white }}</strong></span>
+            </div>
+            <div class="player black-player">
+                <span class="color-indicator black-dot"></span>
+                <span>Black: <strong>{{ room.player_black or "Waiting for opponent..." }}</strong></span>
+            </div>
+        </div>
+        <div class="game-status" id="game-status">
+            {{ "Game in progress" if room.status == "playing" else "Waiting for players" }}
+        </div>
+
+        <div class="spectator-msg" style="{% if not is_spectator %}display:none;{% endif %}">
+            You are spectating.
+        </div>
+    </div>
+
+    <div class="board-wrapper">
+        <div id="chessboard" class="chessboard">
+            <!-- Rendered via JS -->
+        </div>
+    </div>
+</div>
+
+<script>
+    // Pass Jinja vars safely to JS
+    const ROOM_ID = "{{ room._id }}";
+    const CURRENT_USER = "{{ current_user.username }}";
+    const PLAYER_WHITE = "{{ room.player_white }}";
+    const PLAYER_BLACK = "{{ room.player_black or '' }}";
+    const IS_SPECTATOR = {{ 'true' if is_spectator else 'false' }};
+</script>
+<script src="{{ url_for('static', filename='js/game.js') }}"></script>
+{% endblock %}

@@ -10,6 +10,52 @@ class Game:
         self.setup_board()
         self.message = ""
 
+    def to_dict(self):
+        board_state = []
+        for r in range(8):
+            row = []
+            for c in range(8):
+                p = self.board[r][c]
+                row.append(p.serialize() if p else None)
+            board_state.append(row)
+
+        return {
+            "board": board_state,
+            "turn": self.turn,
+            "en_passant_target": self.en_passant_target,
+            "message": self.message,
+        }
+
+    @classmethod
+    def from_dict(cls, data):
+        g = cls()
+        g.turn = data["turn"]
+        g.en_passant_target = (
+            tuple(data["en_passant_target"]) if data.get("en_passant_target") else None
+        )
+        g.message = data.get("message", "")
+
+        piece_classes = {
+            "Pawn": Pawn,
+            "Knight": Knight,
+            "Bishop": Bishop,
+            "Rook": Rook,
+            "Queen": Queen,
+            "King": King,
+        }
+
+        for r in range(8):
+            for c in range(8):
+                p_data = data["board"][r][c]
+                if p_data:
+                    p_class = piece_classes[p_data["type"]]
+                    piece = p_class(p_data["color"])
+                    piece.has_moved = p_data["has_moved"]
+                    g.board[r][c] = piece
+                else:
+                    g.board[r][c] = None
+        return g
+
     def setup_board(self):
         # Pawns
         for c in range(8):
